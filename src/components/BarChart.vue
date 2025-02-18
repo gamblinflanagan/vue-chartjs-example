@@ -8,6 +8,7 @@ defineProps({
 </script>
 
 <script>
+import { ref } from 'vue'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -33,31 +34,22 @@ ChartJS.register(
   PointElement,
 )
 
-const startYear = 2000
-const endYear = 2025
+// const startYear = 1980
+// const endYear = 2025
 
-let label = []
-let timeframe = [20.1, 30.2, 22.3]
+const label = ref([])
+const timeframe = ref([])
+
+// function MakeRequestHandler() {
+//     for (let i = startYear; i < endYear + 1; i++) {
+//       label.push(i)
+//     }
+//     console.log(label)
+// }
 
 export default {
   name: 'LineChart',
   components: { Line },
-  //   data() {
-  //     return {
-  //       chartData: {
-  //         labels: label,
-  //         datasets: [
-  //           {
-  //             label: 'Line Dataset',
-  //             data: timeframe,
-  //             fill: false,
-  //             borderColor: 'rgb(75, 192, 192)',
-  //             tension: 0.1,
-  //           },
-  //         ],
-  //       },
-  //     }
-  //   },
   data: () => ({
     loaded: false,
     chartData: {
@@ -93,10 +85,9 @@ export default {
 
       const data = await response.json()
       console.log(data) //applyData(data);
-      timeframe = data.map((val) => val.value)
-      for (let i = startYear; i < endYear + 1; i++) {
-        label.push(i)
-      }
+      timeframe.value = data.map((val) => val.value)
+      label.value = data.map((date) => date.date.substring(0, 4))
+
       console.log(timeframe)
       console.log(label)
 
@@ -105,7 +96,7 @@ export default {
         datasets: [
           {
             label: 'Line Dataset',
-            data: data.map((val) => val.value),
+            data: timeframe,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1,
@@ -119,44 +110,13 @@ export default {
     }
   },
 }
-
-function MakeRequestHandler() {
-  //   try {
-  //     const response = await fetch(
-  //       'https://fed-charts-default-rtdb.firebaseio.com/observations.json',
-  //       {
-  //         //requestConfig.url, {
-  //         method: 'GET',
-  //         headers: {},
-  //         body: null,
-  //       },
-  //     )
-
-  //     if (!response.ok) {
-  //       console.log('THE REQUEST FAILEd')
-  //       throw new Error('Request failed!')
-  //     }
-
-  //     const data = await response.json()
-  //     console.log(data) //applyData(data);
-  //     timeframe = data.map((i) => i.value)
-  //     console.log(timeframe)
-  //   } catch (err) {
-  //     console.log('THE REQUEST FAILED', err)
-  //   }
-  for (let i = startYear; i < endYear + 1; i++) {
-    label.push(i)
-  }
-  console.log(label)
-}
 </script>
 
 <template>
-  <button v-on:click="MakeRequestHandler">make request</button>
+  <!-- <button @click="MakeRequestHandler">make request</button>
   <input type="text" id="fname" name="fname" value="2000-01-01" />
   <input type="text" id="lname" name="lname" value="2025-01-01" /><br /><br />
-  <!-- <h1>this is the bar chart: {{ name }}</h1> -->
-  <br />
+  <br /> -->
 
   <Line v-if="loaded" :data="chartData" />
 </template>
