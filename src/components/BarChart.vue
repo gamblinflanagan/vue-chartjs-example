@@ -37,69 +37,113 @@ const startYear = 2000
 const endYear = 2025
 
 let label = []
-let timeframe = []
+let timeframe = [20.1, 30.2, 22.3]
 
 export default {
   name: 'LineChart',
   components: { Line },
-  data() {
-    return {
-      chartData: {
+  //   data() {
+  //     return {
+  //       chartData: {
+  //         labels: label,
+  //         datasets: [
+  //           {
+  //             label: 'Line Dataset',
+  //             data: timeframe,
+  //             fill: false,
+  //             borderColor: 'rgb(75, 192, 192)',
+  //             tension: 0.1,
+  //           },
+  //         ],
+  //       },
+  //     }
+  //   },
+  data: () => ({
+    loaded: false,
+    chartData: {
+      labels: label,
+      datasets: [
+        {
+          label: 'Line Dataset',
+          data: timeframe,
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1,
+        },
+      ],
+    },
+  }),
+  async mounted() {
+    this.loaded = false
+
+    try {
+      const response = await fetch(
+        'https://fed-charts-default-rtdb.firebaseio.com/observations.json',
+        {
+          method: 'GET',
+          headers: {},
+          body: null,
+        },
+      )
+
+      if (!response.ok) {
+        console.log('THE REQUEST FAILEd')
+        throw new Error('Request failed!')
+      }
+
+      const data = await response.json()
+      console.log(data) //applyData(data);
+      timeframe = data.map((val) => val.value)
+      for (let i = startYear; i < endYear + 1; i++) {
+        label.push(i)
+      }
+      console.log(timeframe)
+      console.log(label)
+
+      this.chartdata = {
         labels: label,
         datasets: [
           {
             label: 'Line Dataset',
-            data: timeframe,
+            data: data.map((val) => val.value),
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1,
           },
         ],
-      },
+      }
+
+      this.loaded = true
+    } catch (e) {
+      console.error(e)
     }
   },
-  //   data: () => ({
-  //     loaded: false,
-  //     chartData: null,
-  //   }),
-  //   async mounted() {
-  //     this.loaded = false
-
-  //     try {
-  //       const { userlist } = await fetch(
-  //         'https://fed-charts-default-rtdb.firebaseio.com/observations.json',
-  //       )
-  //       this.chartdata = userlist
-
-  //       this.loaded = true
-  //     } catch (e) {
-  //       console.error(e)
-  //     }
-  //   },
 }
 
-async function MakeRequestHandler() {
-  try {
-    const response = await fetch(
-      'https://fed-charts-default-rtdb.firebaseio.com/observations.json',
-      {
-        //requestConfig.url, {
-        method: 'GET',
-        headers: {},
-        body: null,
-      },
-    )
+function MakeRequestHandler() {
+  //   try {
+  //     const response = await fetch(
+  //       'https://fed-charts-default-rtdb.firebaseio.com/observations.json',
+  //       {
+  //         //requestConfig.url, {
+  //         method: 'GET',
+  //         headers: {},
+  //         body: null,
+  //       },
+  //     )
 
-    if (!response.ok) {
-      console.log('THE REQUEST FAILEd')
-      throw new Error('Request failed!')
-    }
+  //     if (!response.ok) {
+  //       console.log('THE REQUEST FAILEd')
+  //       throw new Error('Request failed!')
+  //     }
 
-    const data = await response.json()
-    console.log(data) //applyData(data);
-  } catch (err) {
-    console.log('THE REQUEST FAILED', err)
-  }
+  //     const data = await response.json()
+  //     console.log(data) //applyData(data);
+  //     timeframe = data.map((i) => i.value)
+  //     console.log(timeframe)
+  //   } catch (err) {
+  //     console.log('THE REQUEST FAILED', err)
+  //   }
   for (let i = startYear; i < endYear + 1; i++) {
     label.push(i)
   }
@@ -114,7 +158,7 @@ async function MakeRequestHandler() {
   <!-- <h1>this is the bar chart: {{ name }}</h1> -->
   <br />
 
-  <Line :data="chartData" :options="chartOptions" />
+  <Line v-if="loaded" :data="chartData" />
 </template>
 
 <style scoped>
