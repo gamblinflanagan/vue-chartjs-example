@@ -1,5 +1,5 @@
 <script setup>
-import BarChart from '../components/barChart.vue'
+import LineChart from '../components/lineChart.vue'
 </script>
 
 <template>
@@ -7,7 +7,7 @@ import BarChart from '../components/barChart.vue'
   <div>
     <!-- <h1>This is the page to put the charts</h1> -->
     <!-- <BarChart v-for="i in 5" num1="5" /> -->
-    <BarChart name="Bar chart component" />
+    <LineChart name="Line chart component" />
   </div>
 </template>
 
