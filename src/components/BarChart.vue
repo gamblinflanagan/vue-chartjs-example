@@ -20,7 +20,6 @@ import {
   Legend,
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
-// import { Bar } from 'vue-chartjs'
 // import * as chartConfig from './chartConfig.js'
 
 ChartJS.register(
@@ -34,79 +33,23 @@ ChartJS.register(
   PointElement,
 )
 
-// export default {
-//   name: 'BarChart',
-//   components: { Bar },
-//   data() {
-//     return {
-//       chartData: {
-//         labels: [
-//           'January',
-//           'February',
-//           'March',
-//           'April',
-//           'May',
-//           'June',
-//           'July',
-//           'August',
-//           'September',
-//           'October',
-//           'November',
-//           'December',
-//         ],
-//         datasets: [
-//           {
-//             label: 'Bar Dataset',
-//             data: [65, 59, 80, 81, 56, 55, 40],
-//             backgroundColor: [
-//               'rgba(255, 99, 132, 0.2)',
-//               'rgba(255, 159, 64, 0.2)',
-//               'rgba(255, 205, 86, 0.2)',
-//               'rgba(75, 192, 192, 0.2)',
-//               'rgba(54, 162, 235, 0.2)',
-//               'rgba(153, 102, 255, 0.2)',
-//               'rgba(201, 203, 207, 0.2)',
-//             ],
-//             borderColor: [
-//               'rgb(255, 99, 132)',
-//               'rgb(255, 159, 64)',
-//               'rgb(255, 205, 86)',
-//               'rgb(75, 192, 192)',
-//               'rgb(54, 162, 235)',
-//               'rgb(153, 102, 255)',
-//               'rgb(201, 203, 207)',
-//             ],
-//             borderWidth: 1,
-//           },
-//         ],
-//       },
-//     }
-//   },
-// }
+const startYear = 2000
+const endYear = 2025
+
+let label = []
+let timeframe = []
+
 export default {
   name: 'LineChart',
   components: { Line },
   data() {
     return {
       chartData: {
-        labels: [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'November',
-          'December',
-        ],
+        labels: label,
         datasets: [
           {
             label: 'Line Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40, 45, 69, 88, 80, 95],
+            data: timeframe,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1,
@@ -115,15 +58,63 @@ export default {
       },
     }
   },
+  //   data: () => ({
+  //     loaded: false,
+  //     chartData: null,
+  //   }),
+  //   async mounted() {
+  //     this.loaded = false
+
+  //     try {
+  //       const { userlist } = await fetch(
+  //         'https://fed-charts-default-rtdb.firebaseio.com/observations.json',
+  //       )
+  //       this.chartdata = userlist
+
+  //       this.loaded = true
+  //     } catch (e) {
+  //       console.error(e)
+  //     }
+  //   },
+}
+
+async function MakeRequestHandler() {
+  try {
+    const response = await fetch(
+      'https://fed-charts-default-rtdb.firebaseio.com/observations.json',
+      {
+        //requestConfig.url, {
+        method: 'GET',
+        headers: {},
+        body: null,
+      },
+    )
+
+    if (!response.ok) {
+      console.log('THE REQUEST FAILEd')
+      throw new Error('Request failed!')
+    }
+
+    const data = await response.json()
+    console.log(data) //applyData(data);
+  } catch (err) {
+    console.log('THE REQUEST FAILED', err)
+  }
+  for (let i = startYear; i < endYear + 1; i++) {
+    label.push(i)
+  }
+  console.log(label)
 }
 </script>
 
 <template>
+  <button v-on:click="MakeRequestHandler">make request</button>
+  <input type="text" id="fname" name="fname" value="2000-01-01" />
+  <input type="text" id="lname" name="lname" value="2025-01-01" /><br /><br />
   <!-- <h1>this is the bar chart: {{ name }}</h1> -->
   <br />
-  <div>
-    <Line :data="chartData" :options="chartOptions" />
-  </div>
+
+  <Line :data="chartData" :options="chartOptions" />
 </template>
 
 <style scoped>
