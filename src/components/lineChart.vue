@@ -1,12 +1,3 @@
-<script setup>
-defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-})
-</script>
-
 <script>
 import { ref } from 'vue'
 import {
@@ -39,6 +30,7 @@ ChartJS.register(
 
 const label = ref([])
 const timeframe = ref([])
+let chartName = ''
 
 // function MakeRequestHandler() {
 //     for (let i = startYear; i < endYear + 1; i++) {
@@ -48,6 +40,11 @@ const timeframe = ref([])
 // }
 
 export default {
+  props: ['chartName'],
+  setup(props) {
+    // setup() receives props as the first argument.
+    chartName = props.chartName
+  },
   name: 'LineChart',
   components: { Line },
   data: () => ({
@@ -56,7 +53,7 @@ export default {
       labels: label,
       datasets: [
         {
-          label: 'Line Dataset',
+          label: chartName,
           data: timeframe,
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
@@ -95,7 +92,7 @@ export default {
         labels: label,
         datasets: [
           {
-            label: 'Line Dataset',
+            label: chartName,
             data: timeframe,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
@@ -117,6 +114,7 @@ export default {
   <input type="text" id="fname" name="fname" value="2000-01-01" />
   <input type="text" id="lname" name="lname" value="2025-01-01" /><br /><br />
   <br /> -->
+  <!-- <h1>{{ name }}</h1> -->
 
   <Line v-if="loaded" :data="chartData" />
 </template>

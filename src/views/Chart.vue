@@ -7,7 +7,7 @@ import LineChart from '../components/lineChart.vue'
   <div>
     <!-- <h1>This is the page to put the charts</h1> -->
     <!-- <BarChart v-for="i in 5" num1="5" /> -->
-    <LineChart name="Line chart component" />
+    <LineChart chartName="Global M2" />
   </div>
 </template>
 
