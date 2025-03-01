@@ -31,6 +31,7 @@ ChartJS.register(
 const label = ref([])
 const timeframe = ref([])
 let chartName = ''
+let chartUrl = ''
 
 // function MakeRequestHandler() {
 //     for (let i = startYear; i < endYear + 1; i++) {
@@ -40,10 +41,11 @@ let chartName = ''
 // }
 
 export default {
-  props: ['chartName'],
+  props: ['chartName', 'chartUrl'],
   setup(props) {
     // setup() receives props as the first argument.
-    chartName = props.chartName
+    chartName = props.chartName,
+    chartUrl = props.chartUrl
   },
   name: 'LineChart',
   components: { Line },
@@ -66,8 +68,10 @@ export default {
     this.loaded = false
 
     try {
+      // console.log('CHARTNAME', this.chartName);
+      // console.log('CHARTNAME', this.chartUrl);
       const response = await fetch(
-        'https://fed-charts-default-rtdb.firebaseio.com/observations.json',
+        this.chartUrl,
         {
           method: 'GET',
           headers: {},
@@ -81,12 +85,12 @@ export default {
       }
 
       const data = await response.json()
-      console.log(data) //applyData(data);
+      // console.log(data) //applyData(data);
       timeframe.value = data.map((val) => val.value)
       label.value = data.map((date) => date.date.substring(0, 4))
 
-      console.log(timeframe)
-      console.log(label)
+      // console.log(timeframe)
+      // console.log(label)
 
       this.chartdata = {
         labels: label,
@@ -120,74 +124,5 @@ export default {
 </template>
 
 <style scoped>
-.item {
-  margin-top: 2rem;
-  display: flex;
-  position: relative;
-}
 
-.details {
-  flex: 1;
-  margin-left: 1rem;
-}
-
-i {
-  display: flex;
-  place-items: center;
-  place-content: center;
-  width: 32px;
-  height: 32px;
-  color: var(--color-text);
-}
-
-h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin-bottom: 0.4rem;
-  color: var(--color-heading);
-}
-
-@media (min-width: 1024px) {
-  .item {
-    margin-top: 0;
-    padding: 0.4rem 0 1rem calc(var(--section-gap) / 2);
-  }
-
-  i {
-    top: calc(50% - 25px);
-    left: -26px;
-    position: absolute;
-    border: 1px solid var(--color-border);
-    background: var(--color-background);
-    border-radius: 8px;
-    width: 50px;
-    height: 50px;
-  }
-
-  .item:before {
-    content: ' ';
-    border-left: 1px solid var(--color-border);
-    position: absolute;
-    left: 0;
-    bottom: calc(50% + 25px);
-    height: calc(50% - 25px);
-  }
-
-  .item:after {
-    content: ' ';
-    border-left: 1px solid var(--color-border);
-    position: absolute;
-    left: 0;
-    top: calc(50% + 25px);
-    height: calc(50% - 25px);
-  }
-
-  .item:first-of-type:before {
-    display: none;
-  }
-
-  .item:last-of-type:after {
-    display: none;
-  }
-}
 </style>
