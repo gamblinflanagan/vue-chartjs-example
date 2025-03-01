@@ -68,10 +68,10 @@ export default {
     this.loaded = false
 
     try {
-      console.log('CHARTNAME', chartName);
-      console.log('CHARTURL', chartUrl);
+      // console.log('CHARTNAME', this.chartName);
+      // console.log('CHARTNAME', this.chartUrl);
       const response = await fetch(
-        chartUrl,
+        this.chartUrl,
         {
           method: 'GET',
           headers: {},
@@ -85,12 +85,12 @@ export default {
       }
 
       const data = await response.json()
-      console.log(data) //applyData(data);
+      // console.log(data) //applyData(data);
       timeframe.value = data.map((val) => val.value)
       label.value = data.map((date) => date.date.substring(0, 4))
 
-      console.log(timeframe)
-      console.log(label)
+      // console.log(timeframe)
+      // console.log(label)
 
       this.chartdata = {
         labels: label,
