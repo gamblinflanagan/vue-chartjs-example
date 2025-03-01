@@ -87,7 +87,7 @@ export default {
       const data = await response.json()
       // console.log(data) //applyData(data);
       timeframe.value = data.map((val) => val.value)
-      label.value = data.map((date) => date.date.substring(0, 4))
+      label.value = data.map((date) => date.date)//.substring(0, 4))
 
       // console.log(timeframe)
       // console.log(label)

@@ -11,6 +11,14 @@
       name: 'Reverse Repo Market',
       link: 'https://fed-charts-default-rtdb.firebaseio.com/RRPONTSYD/observations.json',
     },
+    {
+      name: 'Treasury General Account',
+      link: 'https://fed-charts-default-rtdb.firebaseio.com/D2WLTGAL/observations.json',
+    },
+    {
+      name: 'Consumer Inflation Rate',
+      link: 'https://fed-charts-default-rtdb.firebaseio.com/FPCPITOTLZGUSA/observations.json',
+    },
   ]);
 </script>
 
