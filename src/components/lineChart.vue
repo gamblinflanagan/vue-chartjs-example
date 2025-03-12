@@ -1,3 +1,7 @@
+
+<!-- <script setup>
+  defineProps({ chartUrl, chartName });
+</script> -->
 <script>
 import { ref } from 'vue'
 import {
